@@ -18,7 +18,7 @@ apply plugin: 'eclipse'
 
 version = '0.1a'
 group = 'net.eve0415.minecraft'
-archivesBaseName = 'ifpatcher'
+archivesBaseName = 'IFPatcher'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 

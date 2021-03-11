@@ -12,6 +12,8 @@ import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
+import net.minecraft.launchwrapper.Launch;
+
 public abstract class Patch implements Opcodes {
     protected ClassNode classNode;
     byte[] inputClassBytes;
@@ -43,6 +45,10 @@ public abstract class Patch implements Opcodes {
 
     protected String getName(final Class<?> clazz) {
         return Type.getInternalName(clazz);
+    }
+
+    protected String getName(String name, String srgName) {
+        return (boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment") ? name : srgName;
     }
 
     protected final String hookClass = getName(getClass()).replaceAll("patch/(.+)Patch", "hook/$1Hook");
