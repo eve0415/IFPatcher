@@ -11,9 +11,9 @@ Please use the latest version [(1.12.13-237)](https://www.curseforge.com/minecra
 This mod will patch some bugs or implement some features:
 
 - Fluid Pump
-  - Not working properly on certain conditions.
-  - Using buckets to fill out fluid directly from GUI.
+  - Make pump work properly on any conditions.
+  - Can now fill fluid to buckets directly from GUI.
 
-If you find any other issues related to IF, please open a issues or pull requests on this repository.
+If you find any other issues related to IF, please open an issue or pull request on this repository.
 
-I will try to find some time to patch some other issues.
+I will try to find some time to patch some other issues if requested.
