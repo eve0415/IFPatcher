@@ -16,7 +16,7 @@ plugins {
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 
-version = '1.0.0b'
+version = '1.0.0'
 group = 'net.eve0415.minecraft'
 archivesBaseName = 'IFPatcher'
 
