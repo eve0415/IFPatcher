@@ -1,8 +1,8 @@
-name: Build
+name: Release
 
 on:
   push:
-    tags-ignore: '*'
+    tags: '*'
 
 jobs:
   build:
@@ -26,9 +26,10 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build
 
-    - name: Upload artifact
-      uses: actions/upload-artifact@v2
+    - name: Release package
+      uses: softprops/action-gh-release@v1
       if: success()
       with:
-        name: IFPatcher
-        path: build/libs
+        files: build/libs/*.jar
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
