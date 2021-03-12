@@ -121,7 +121,6 @@ public class PatchPump extends Patch {
             return 0;
 
         final BlockPos farthestFluid = getFarthestFluid(area);
-        IFPatcher.LOGGER.info(farthestFluid);
         if (farthestFluid == null)
             return 0;
 
