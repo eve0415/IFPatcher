@@ -16,7 +16,7 @@ plugins {
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 
-version = '0.1a'
+version = '0.0.1a'
 group = 'net.eve0415.minecraft'
 archivesBaseName = 'IFPatcher'
 
@@ -50,7 +50,6 @@ dependencies {
 
     compile "curse.maven:industrialforegoing-266515:2745321"
     compile "curse.maven:teslacorelib-254602:2891841"
-    //compile fg.deobf("curse.maven:teslacorelib-254602:2891841")
 }
 
 processResources {

@@ -43,7 +43,7 @@ public class PatchPump extends Patch {
     @Override
     protected boolean patch() {
         // Accepting fluid items. Such as buckets.
-        final MethodNode acceptsFluidItem = new MethodNode(ASM5, ACC_PUBLIC | ACC_SYNTHETIC, "acceptsFluidItem",
+        final MethodNode acceptsFluidItem = new MethodNode(ACC_PROTECTED, "acceptsFluidItem",
                 "(Lnet/minecraft/item/ItemStack;)Z", null, null);
         acceptsFluidItem.instructions.add(new VarInsnNode(ALOAD, 1));
         acceptsFluidItem.instructions.add(new MethodInsnNode(INVOKESTATIC, hookClass, "acceptsFluidItem",
@@ -55,8 +55,8 @@ public class PatchPump extends Patch {
             IFPatcher.LOGGER.info("Failed to patch to make pump accepts fluid items!");
         }
 
-        // Filling some liquids to item
-        final MethodNode processFluidItems = new MethodNode(ASM5, ACC_PUBLIC | ACC_SYNTHETIC, "processFluidItems",
+        // Filling liquid to item
+        final MethodNode processFluidItems = new MethodNode(ACC_PROTECTED, "processFluidItems",
                 "(Lnet/minecraftforge/items/ItemStackHandler;)V", null, null);
         processFluidItems.instructions.add(new VarInsnNode(ALOAD, 0));
         processFluidItems.instructions.add(new InsnNode(DUP));
