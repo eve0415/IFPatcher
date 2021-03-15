@@ -5,7 +5,7 @@
   "description": "Patch some bugs found in Industrial Foregoing 1.12.2",
   "version": "${version}",
   "mcversion": "1.12.2",
-  "url": "https://github.com/eve0415/IFPatcher",
+  "url": "https://www.curseforge.com/minecraft/mc-mods/ifpatcher",
   "updateUrl": "",
   "authorList": ["eve0415"],
   "credits": "The Industrial Foregoing guys, for making mod",
