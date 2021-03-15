@@ -6,6 +6,9 @@ bin
 .classpath
 .project
 
+# vscode
+launch.json
+
 # idea
 out
 *.ipr
@@ -20,6 +23,3 @@ build
 # other
 eclipse
 run
-
-# Files from Forge MDK
-forge*changelog.txt
