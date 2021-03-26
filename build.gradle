@@ -69,6 +69,7 @@ if (file("passwords.properties").exists()) {
     def keyAlias = System.getenv('keyStoreAlias')
     def keyStorePass = System.getenv('keyStorePass')
     def keyStoreKeyPass = System.getenv('keyStoreKeyPass')
+    println(keyStore)
 }
 
 processResources {
