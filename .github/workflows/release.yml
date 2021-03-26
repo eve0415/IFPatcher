@@ -24,7 +24,14 @@ jobs:
         restore-keys: ${{ runner.os }}-gradle
 
     - name: Build with Gradle
-      run: ./gradlew build
+      run: |
+        echo "${{ secrets.BASE64 }}" | base64 -d > keyStore.txt
+        export keyStore="${{ secrets.keyStore }}"
+        export keyStoreAlias="${{ secrets.KEY_ALIAS }}"
+        export keyStorePass="${{ secrets.KEY_PASSWORD }}"
+        export keyStoreKeyPass="${{ secrets.KEYSTORE_PASSWORD }}"
+        export signSHA1="${{ secrets.SHA1 }}"
+        ./gradlew build
 
     - name: Release package
       uses: softprops/action-gh-release@v1

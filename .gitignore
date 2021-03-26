@@ -20,6 +20,11 @@ out
 build
 .gradle
 
+# cert
+cert*
+secret.properties
+base64.txt
+
 # other
 eclipse
 run
