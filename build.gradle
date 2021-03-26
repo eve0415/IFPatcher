@@ -57,13 +57,14 @@ dependencies {
     compile "curse.maven:teslacorelib-254602:2891841"
 }
 
-Properties properties = new Properties()
-properties.load(project.rootProject.file('secret.properties').newDataInputStream())
-def keyStore = properties.getProperty('keyStore')
-def keyStoreAlias = properties.getProperty('keyStoreAlias')
-def keyStorePass = properties.getProperty('keyStorePass')
-def keyStoreKeyPass = properties.getProperty('keyStoreKeyPass')
-def signSHA1 = properties.getProperty('signSHA1')
+if (file("passwords.properties").exists()) {
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('secret.properties').newDataInputStream())
+    def keyStore = properties.getProperty('keyStore')
+    def keyStoreAlias = properties.getProperty('keyStoreAlias')
+    def keyStorePass = properties.getProperty('keyStorePass')
+    def keyStoreKeyPass = properties.getProperty('keyStoreKeyPass')
+}
 
 processResources {
 	inputs.property "version", project.version
@@ -82,7 +83,7 @@ processResources {
 blossom {
     replaceTokenIn('src/main/java/net/eve0415/ifpatcher/Reference.java')
     replaceToken '@VERSION@', version
-    replaceToken '@FINGERPRINT@', signSHA1
+    replaceToken '@FINGERPRINT@', project.hasProperty('signSHA1') ? project.getProperty('signSHA1') : ""
 }
 
 compileJava {
