@@ -84,6 +84,7 @@ blossom {
     replaceTokenIn('src/main/java/net/eve0415/ifpatcher/Reference.java')
     replaceToken '@VERSION@', version
     replaceToken '@FINGERPRINT@', project.hasProperty('signSHA1') ? project.getProperty('signSHA1') : System.getenv('signSHA1')
+
 }
 
 compileJava {
