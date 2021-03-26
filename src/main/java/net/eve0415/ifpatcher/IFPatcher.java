@@ -11,7 +11,7 @@ import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 
 @MCVersion("1.12.2")
 @IFMLLoadingPlugin.SortingIndex(1001)
-@Mod(modid = Reference.MODID, name = Reference.NAME, version = Reference.VERSION, dependencies = Reference.DEPENDENCIES, acceptableRemoteVersions = "*")
+@Mod(modid = Reference.MODID, name = Reference.NAME, version = Reference.VERSION, dependencies = Reference.DEPENDENCIES, certificateFingerprint = Reference.FINGERPRINT, acceptableRemoteVersions = "*")
 public class IFPatcher implements IFMLLoadingPlugin {
     public static Logger LOGGER = LogManager.getLogger("IFPatcher");
 
