@@ -64,12 +64,6 @@ if (file("passwords.properties").exists()) {
     def keyStoreAlias = properties.getProperty('keyStoreAlias')
     def keyStorePass = properties.getProperty('keyStorePass')
     def keyStoreKeyPass = properties.getProperty('keyStoreKeyPass')
-} else {
-    def keyStore = rootProject.file('keyStore.txt')
-    def keyAlias = System.getenv('keyStoreAlias')
-    def keyStorePass = System.getenv('keyStorePass')
-    def keyStoreKeyPass = System.getenv('keyStoreKeyPass')
-    println(keyStore)
 }
 
 processResources {
@@ -89,7 +83,7 @@ processResources {
 blossom {
     replaceTokenIn('src/main/java/net/eve0415/ifpatcher/Reference.java')
     replaceToken '@VERSION@', version
-    replaceToken '@FINGERPRINT@', project.hasProperty('signSHA1') ? project.getProperty('signSHA1') : ""
+    replaceToken '@FINGERPRINT@', project.hasProperty('signSHA1') ? project.getProperty('signSHA1') : System.getenv('signSHA1')
 }
 
 compileJava {
@@ -123,10 +117,10 @@ task signJar(type: SignJar, dependsOn: jar) {
         project.hasProperty('keyStore')
     }
 
-    keyStore = project.findProperty('keyStore')
-    alias = project.findProperty('keyStoreAlias')
-    storePass = project.findProperty('keyStorePass')
-    keyPass = project.findProperty('keyStoreKeyPass')
+    keyStore = project.hasProperty('keyStore') ? project.getProperty('keyStore') : System.getenv('keyStore')
+    alias = project.hasProperty('keyStoreAlias') ? project.getProperty('keyStoreAlias') : System.getenv('keyStoreAlias')
+    storePass = project.hasProperty('keyStorePass') ? project.getProperty('keyStorePass') : System.getenv('keyStorePass')
+    keyPass = project.hasProperty('keyStoreKeyPass') ? project.getProperty('keyStoreKeyPass') : System.getenv('keyStoreKeyPass')
     inputFile = jar.archivePath
     outputFile = jar.archivePath
 }
