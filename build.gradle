@@ -64,6 +64,11 @@ if (file("passwords.properties").exists()) {
     def keyStoreAlias = properties.getProperty('keyStoreAlias')
     def keyStorePass = properties.getProperty('keyStorePass')
     def keyStoreKeyPass = properties.getProperty('keyStoreKeyPass')
+} else {
+    def keyStore = rootProject.file('keyStore.txt')
+    def keyAlias = System.getenv('keyStoreAlias')
+    def keyStorePass = System.getenv('keyStorePass')
+    def keyStoreKeyPass = System.getenv('keyStoreKeyPass')
 }
 
 processResources {
