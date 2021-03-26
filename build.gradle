@@ -113,10 +113,6 @@ jar {
 jar.finalizedBy('reobfJar') 
 
 task signJar(type: SignJar, dependsOn: jar) {
-    onlyIf {
-        project.hasProperty('keyStore')
-    }
-
     keyStore = project.hasProperty('keyStore') ? project.getProperty('keyStore') : System.getenv('keyStore')
     alias = project.hasProperty('keyStoreAlias') ? project.getProperty('keyStoreAlias') : System.getenv('keyStoreAlias')
     storePass = project.hasProperty('keyStorePass') ? project.getProperty('keyStorePass') : System.getenv('keyStorePass')
