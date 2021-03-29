@@ -57,13 +57,13 @@ dependencies {
     compile "curse.maven:teslacorelib-254602:2891841"
 }
 
-if (file("passwords.properties").exists()) {
+if (file("secret.properties").exists()) {
     Properties properties = new Properties()
     properties.load(project.rootProject.file('secret.properties').newDataInputStream())
-    def keyStore = properties.getProperty('keyStore')
-    def keyStoreAlias = properties.getProperty('keyStoreAlias')
-    def keyStorePass = properties.getProperty('keyStorePass')
-    def keyStoreKeyPass = properties.getProperty('keyStoreKeyPass')
+    ext.keyStore = properties.getProperty('keyStore')
+    ext.keyStoreAlias = properties.getProperty('keyStoreAlias')
+    ext.keyStorePass = properties.getProperty('keyStorePass')
+    ext.keyStoreKeyPass = properties.getProperty('keyStoreKeyPass')
 }
 
 processResources {
