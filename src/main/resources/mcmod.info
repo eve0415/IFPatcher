@@ -6,7 +6,7 @@
   "version": "${version}",
   "mcversion": "1.12.2",
   "url": "https://www.curseforge.com/minecraft/mc-mods/ifpatcher",
-  "updateJSON": "https://raw.githubusercontent.com/eve0415/IFPatcher/main/update.json",
+  "updateUrl": "https://www.curseforge.com/minecraft/mc-mods/ifpatcher/files",
   "authorList": ["eve0415"],
   "credits": "The Industrial Foregoing guys, for making mod",
   "logoFile": "",
