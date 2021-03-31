@@ -62,7 +62,6 @@ public class PatchPlantSower extends Patch {
         newInst.add(new FieldInsnNode(GETFIELD, hook, "hoeGround", "Z"));
         newInst.add(new VarInsnNode(ALOAD, 4));
         newInst.add(new VarInsnNode(ALOAD, 2));
-
         newInst.add(new MethodInsnNode(INVOKESTATIC, hookClass, "tillBlock",
                 "(Lnet/minecraft/world/World;ZLnet/minecraft/item/ItemStack;Lnet/minecraft/util/math/BlockPos;)V",
                 false));
