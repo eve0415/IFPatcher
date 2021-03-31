@@ -20,7 +20,7 @@ import net.minecraftforge.gradle.common.task.SignJar
 import groovy.json.JsonSlurper                       
 import groovy.json.JsonOutput
 
-version = '1.1.0'
+version = '1.2.0'
 group = 'net.eve0415.minecraft'
 archivesBaseName = 'IFPatcher'
 
