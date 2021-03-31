@@ -15,6 +15,8 @@ This mod will patch some bugs or implement some features:
   - Can now fill fluid to buckets directly from GUI.
 - Plant Sower
   - Till any blocks if possible. (You no longer have to use `minecraft:dirt` or `minecraft:grass`)
+- Potion Brewer
+  - Can now brew potion that the ingredients does not start from `minecraft:nether_wart`. (Ex. Potion of Weakness)
 
 If you find any other issues related to IF, please open an issue or pull request on this repository.
 
