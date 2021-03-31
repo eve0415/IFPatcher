@@ -60,8 +60,8 @@ public class PatchPotionBrewer extends Patch {
         newInst.add(new MethodInsnNode(INVOKESTATIC, hookClass, "patchIngredientItemsHandler",
                 "(Lnet/ndrei/teslacorelib/inventory/LockableItemHandler;)Lnet/minecraftforge/items/IItemHandler;",
                 false));
-
         initInputInventories.insertBefore(insertionPoint, newInst);
+        IFPatcher.LOGGER.info("Potion Brewer can now brew potion that does not start from Nether Wart!");
 
         return true;
     }
