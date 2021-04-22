@@ -47,7 +47,7 @@ public abstract class Patch implements Opcodes {
         return Type.getInternalName(clazz);
     }
 
-    protected String getName(String name, String srgName) {
+    protected String getName(final String name, final String srgName) {
         return (boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment") ? name : srgName;
     }
 

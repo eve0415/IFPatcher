@@ -13,10 +13,12 @@ This mod will patch some bugs or implement some features:
 - Fluid Pump
   - Make pump work properly on any conditions.
   - Can now fill fluid to buckets directly from GUI.
-- Plant Sower
-  - Till any blocks if possible. (You no longer have to use `minecraft:dirt` or `minecraft:grass`)
+- Laser Base
+  - Stop crashing Minecraft when using negative lens.
 - Potion Brewer
   - Can now brew potion that the ingredients does not start from `minecraft:nether_wart`. (Ex. Potion of Weakness)
+- Plant Sower
+  - Till any blocks if possible. (You no longer have to use `minecraft:dirt` or `minecraft:grass`)
 
 If you find any other issues related to IF, please open an issue or pull request on this repository.
 
