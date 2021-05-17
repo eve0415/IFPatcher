@@ -4,19 +4,16 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
-
 import com.buuz135.industrial.proxy.BlockRegistry;
 import com.buuz135.industrial.utils.BlockUtils;
 import com.buuz135.industrial.utils.ItemStackUtils;
 import com.buuz135.industrial.utils.WorkUtils;
-
 import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
-
 import net.eve0415.ifpatcher.IFPatcher;
 import net.eve0415.ifpatcher.Patch;
 import net.minecraft.block.Block;
@@ -34,142 +31,151 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class PatchPump extends Patch {
-    private final String hook = "com/buuz135/industrial/tile/world/FluidPumpTile";
+  private final String hook = "com/buuz135/industrial/tile/world/FluidPumpTile";
 
-    public PatchPump(final byte[] inputClass) {
-        super(inputClass);
+  public PatchPump(final byte[] inputClass) {
+    super(inputClass);
+  }
+
+  @Override
+  protected boolean patch() {
+    // Accepting fluid items. Such as buckets.
+    final MethodNode acceptsFluidItem = new MethodNode(ACC_PROTECTED, "acceptsFluidItem",
+        "(Lnet/minecraft/item/ItemStack;)Z", null, null);
+    acceptsFluidItem.instructions.add(new VarInsnNode(ALOAD, 1));
+    acceptsFluidItem.instructions.add(new MethodInsnNode(INVOKESTATIC, hookClass,
+        "acceptsFluidItem", "(Lnet/minecraft/item/ItemStack;)Z", false));
+    acceptsFluidItem.instructions.add(new InsnNode(IRETURN));
+    if (classNode.methods.add(acceptsFluidItem)) {
+      IFPatcher.LOGGER.info("Pump now accepts fluid items!");
+    } else {
+      IFPatcher.LOGGER.info("Failed to patch to make pump accepts fluid items!");
     }
 
-    @Override
-    protected boolean patch() {
-        // Accepting fluid items. Such as buckets.
-        final MethodNode acceptsFluidItem = new MethodNode(ACC_PROTECTED, "acceptsFluidItem",
-                "(Lnet/minecraft/item/ItemStack;)Z", null, null);
-        acceptsFluidItem.instructions.add(new VarInsnNode(ALOAD, 1));
-        acceptsFluidItem.instructions.add(new MethodInsnNode(INVOKESTATIC, hookClass, "acceptsFluidItem",
-                "(Lnet/minecraft/item/ItemStack;)Z", false));
-        acceptsFluidItem.instructions.add(new InsnNode(IRETURN));
-        if (classNode.methods.add(acceptsFluidItem)) {
-            IFPatcher.LOGGER.info("Pump now accepts fluid items!");
-        } else {
-            IFPatcher.LOGGER.info("Failed to patch to make pump accepts fluid items!");
-        }
-
-        // Filling liquid to item
-        final MethodNode processFluidItems = new MethodNode(ACC_PROTECTED, "processFluidItems",
-                "(Lnet/minecraftforge/items/ItemStackHandler;)V", null, null);
-        processFluidItems.instructions.add(new VarInsnNode(ALOAD, 0));
-        processFluidItems.instructions.add(new InsnNode(DUP));
-        processFluidItems.instructions
-                .add(new FieldInsnNode(GETFIELD, hook, "tank", "Lnet/minecraftforge/fluids/IFluidTank;"));
-        processFluidItems.instructions.add(new VarInsnNode(ALOAD, 1));
-        processFluidItems.instructions.add(new MethodInsnNode(INVOKESTATIC, hookClass, "processFluidItems",
-                "(Lnet/minecraftforge/fluids/IFluidTank;Lnet/minecraftforge/items/ItemStackHandler;)V", false));
-        processFluidItems.instructions.add(new InsnNode(RETURN));
-        if (classNode.methods.add(processFluidItems)) {
-            IFPatcher.LOGGER.info("Pump now fill fluids to items!");
-        } else {
-            IFPatcher.LOGGER.info("Failed to patch to make pump fill fluids to items!");
-        }
-
-        // Making it work perfectly.
-        final InsnList work = findMethod("work").instructions;
-        work.clear();
-        work.add(new VarInsnNode(ALOAD, 0));
-        work.add(new FieldInsnNode(GETFIELD, hook, "tank", "Lnet/minecraftforge/fluids/IFluidTank;"));
-        work.add(new VarInsnNode(ALOAD, 0));
-        work.add(new FieldInsnNode(GETFIELD, hook, "fluid", "Ljava/lang/String;"));
-        work.add(new VarInsnNode(ALOAD, 0));
-        work.add(new FieldInsnNode(GETFIELD, hook, getName("world", "field_145850_b"), "Lnet/minecraft/world/World;"));
-        work.add(new VarInsnNode(ALOAD, 0));
-        work.add(new FieldInsnNode(GETFIELD, hook, getName("pos", "field_174879_c"),
-                "Lnet/minecraft/util/math/BlockPos;"));
-        work.add(new MethodInsnNode(INVOKESTATIC, hookClass, "beforeWork",
-                "(Lnet/minecraftforge/fluids/IFluidTank;Ljava/lang/String;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;)V",
-                false));
-        work.add(new VarInsnNode(ALOAD, 0));
-        work.add(new MethodInsnNode(INVOKEVIRTUAL, hook, getName("getBlockType", "func_145838_q"),
-                "()Lnet/minecraft/block/Block;", false));
-        work.add(new VarInsnNode(ALOAD, 0));
-        work.add(new MethodInsnNode(INVOKEVIRTUAL, hook, "getWorkingArea", "()Lnet/minecraft/util/math/AxisAlignedBB;",
-                false));
-        work.add(new MethodInsnNode(INVOKESTATIC, hookClass, "work",
-                "(Lnet/minecraft/block/Block;Lnet/minecraft/util/math/AxisAlignedBB;)F", false));
-        work.add(new InsnNode(FRETURN));
-        IFPatcher.LOGGER.info("Pump now works properly!");
-
-        return true;
+    // Filling liquid to item
+    final MethodNode processFluidItems = new MethodNode(ACC_PROTECTED, "processFluidItems",
+        "(Lnet/minecraftforge/items/ItemStackHandler;)V", null, null);
+    processFluidItems.instructions.add(new VarInsnNode(ALOAD, 0));
+    processFluidItems.instructions.add(new InsnNode(DUP));
+    processFluidItems.instructions
+        .add(new FieldInsnNode(GETFIELD, hook, "tank", "Lnet/minecraftforge/fluids/IFluidTank;"));
+    processFluidItems.instructions.add(new VarInsnNode(ALOAD, 1));
+    processFluidItems.instructions
+        .add(new MethodInsnNode(INVOKESTATIC, hookClass, "processFluidItems",
+            "(Lnet/minecraftforge/fluids/IFluidTank;Lnet/minecraftforge/items/ItemStackHandler;)V",
+            false));
+    processFluidItems.instructions.add(new InsnNode(RETURN));
+    if (classNode.methods.add(processFluidItems)) {
+      IFPatcher.LOGGER.info("Pump now fill fluids to items!");
+    } else {
+      IFPatcher.LOGGER.info("Failed to patch to make pump fill fluids to items!");
     }
 
-    public static IFluidTank tank;
-    public static String fluid;
-    public static World world;
-    public static BlockPos pos;
+    // Making it work perfectly.
+    final InsnList work = findMethod("work").instructions;
+    work.clear();
+    work.add(new VarInsnNode(ALOAD, 0));
+    work.add(new FieldInsnNode(GETFIELD, hook, "tank", "Lnet/minecraftforge/fluids/IFluidTank;"));
+    work.add(new VarInsnNode(ALOAD, 0));
+    work.add(new FieldInsnNode(GETFIELD, hook, "fluid", "Ljava/lang/String;"));
+    work.add(new VarInsnNode(ALOAD, 0));
+    work.add(new FieldInsnNode(GETFIELD, hook, getName("world", "field_145850_b"),
+        "Lnet/minecraft/world/World;"));
+    work.add(new VarInsnNode(ALOAD, 0));
+    work.add(new FieldInsnNode(GETFIELD, hook, getName("pos", "field_174879_c"),
+        "Lnet/minecraft/util/math/BlockPos;"));
+    work.add(new MethodInsnNode(INVOKESTATIC, hookClass, "beforeWork",
+        "(Lnet/minecraftforge/fluids/IFluidTank;Ljava/lang/String;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;)V",
+        false));
+    work.add(new VarInsnNode(ALOAD, 0));
+    work.add(new MethodInsnNode(INVOKEVIRTUAL, hook, getName("getBlockType", "func_145838_q"),
+        "()Lnet/minecraft/block/Block;", false));
+    work.add(new VarInsnNode(ALOAD, 0));
+    work.add(new MethodInsnNode(INVOKEVIRTUAL, hook, "getWorkingArea",
+        "()Lnet/minecraft/util/math/AxisAlignedBB;", false));
+    work.add(new MethodInsnNode(INVOKESTATIC, hookClass, "work",
+        "(Lnet/minecraft/block/Block;Lnet/minecraft/util/math/AxisAlignedBB;)F", false));
+    work.add(new InsnNode(FRETURN));
+    IFPatcher.LOGGER.info("Pump now works properly!");
 
-    public static void beforeWork(final IFluidTank t, final String f, final World w, final BlockPos p) {
-        tank = t;
-        fluid = f;
-        world = w;
-        pos = p;
+    return true;
+  }
+
+  public static IFluidTank tank;
+  public static String fluid;
+  public static World world;
+  public static BlockPos pos;
+
+  public static void beforeWork(final IFluidTank t, final String f, final World w,
+      final BlockPos p) {
+    tank = t;
+    fluid = f;
+    world = w;
+    pos = p;
+  }
+
+  public static float work(final Block pump, final AxisAlignedBB area) {
+    if (WorkUtils.isDisabled(pump) || fluid == null
+        || tank.getFluidAmount() + 1000 > tank.getCapacity())
+      return 0;
+
+    if (!isBlockSameFluid(pos.down()))
+      return 0;
+
+    final BlockPos farthestFluid = getFarthestFluid(area);
+    if (farthestFluid == null)
+      return 0;
+
+    final FluidStack willPump =
+        FluidUtil.getFluidHandler(world, farthestFluid, null).drain(1000, true);
+    if (BlockRegistry.fluidPumpBlock.isReplaceFluidWithCobble()) {
+      world.setBlockState(farthestFluid, Blocks.COBBLESTONE.getDefaultState());
+    } else {
+      world.setBlockToAir(farthestFluid);
     }
+    tank.fill(willPump, true);
+    return 1;
+  }
 
-    public static float work(final Block pump, final AxisAlignedBB area) {
-        if (WorkUtils.isDisabled(pump) || fluid == null || tank.getFluidAmount() + 1000 > tank.getCapacity())
-            return 0;
+  public static BlockPos getFarthestFluid(final AxisAlignedBB area) {
+    int offsetY = 0;
+    List<BlockPos> blocks;
+    do {
+      offsetY--;
+      blocks = BlockUtils.getBlockPosInAABB(area.offset(0, offsetY, 0));
+      blocks.removeIf(
+          pos -> world.isOutsideBuildHeight(pos) || !isFullFluid(pos) || !isBlockSameFluid(pos));
+    } while (!blocks.isEmpty());
 
-        if (!isBlockSameFluid(pos.down()))
-            return 0;
+    offsetY++;
+    final int y = pos.getY() + offsetY;
+    final Queue<BlockPos> queue = new PriorityQueue<>(Comparator
+        .comparingDouble(value -> ((BlockPos) value).distanceSqToCenter(pos.getX(), y, pos.getZ()))
+        .reversed());
+    queue.addAll(BlockUtils.getBlockPosInAABB(area.offset(0, offsetY, 0)));
+    queue.removeIf(
+        pos -> world.isOutsideBuildHeight(pos) || !isFullFluid(pos) || !isBlockSameFluid(pos));
 
-        final BlockPos farthestFluid = getFarthestFluid(area);
-        if (farthestFluid == null)
-            return 0;
+    return queue.poll();
+  }
 
-        final FluidStack willPump = FluidUtil.getFluidHandler(world, farthestFluid, null).drain(1000, true);
-        if (BlockRegistry.fluidPumpBlock.isReplaceFluidWithCobble()) {
-            world.setBlockState(farthestFluid, Blocks.COBBLESTONE.getDefaultState());
-        } else {
-            world.setBlockToAir(farthestFluid);
-        }
-        tank.fill(willPump, true);
-        return 1;
-    }
+  public static boolean isBlockSameFluid(final BlockPos pos) {
+    final Fluid f = FluidRegistry.lookupFluidForBlock(world.getBlockState(pos).getBlock());
+    return f != null && f.getName().equals(fluid);
+  }
 
-    public static BlockPos getFarthestFluid(final AxisAlignedBB area) {
-        int offsetY = 0;
-        List<BlockPos> blocks;
-        do {
-            offsetY--;
-            blocks = BlockUtils.getBlockPosInAABB(area.offset(0, offsetY, 0));
-            blocks.removeIf(pos -> world.isOutsideBuildHeight(pos) || !isFullFluid(pos) || !isBlockSameFluid(pos));
-        } while (!blocks.isEmpty());
+  public static boolean isFullFluid(final BlockPos pos) {
+    final IFluidHandler f = FluidUtil.getFluidHandler(world, pos, null);
+    if (f == null)
+      return false;
+    return FluidUtil.getFluidHandler(world, pos, null).drain(1000, false) != null;
+  }
 
-        offsetY++;
-        final int y = pos.getY() + offsetY;
-        final Queue<BlockPos> queue = new PriorityQueue<>(Comparator
-                .comparingDouble(value -> ((BlockPos) value).distanceSqToCenter(pos.getX(), y, pos.getZ())).reversed());
-        queue.addAll(BlockUtils.getBlockPosInAABB(area.offset(0, offsetY, 0)));
-        queue.removeIf(pos -> world.isOutsideBuildHeight(pos) || !isFullFluid(pos) || !isBlockSameFluid(pos));
+  public static boolean acceptsFluidItem(final ItemStack stack) {
+    return ItemStackUtils.acceptsFluidItem(stack);
+  }
 
-        return queue.poll();
-    }
-
-    public static boolean isBlockSameFluid(final BlockPos pos) {
-        final Fluid f = FluidRegistry.lookupFluidForBlock(world.getBlockState(pos).getBlock());
-        return f != null && f.getName().equals(fluid);
-    }
-
-    public static boolean isFullFluid(final BlockPos pos) {
-        final IFluidHandler f = FluidUtil.getFluidHandler(world, pos, null);
-        if (f == null)
-            return false;
-        return FluidUtil.getFluidHandler(world, pos, null).drain(1000, false) != null;
-    }
-
-    public static boolean acceptsFluidItem(final ItemStack stack) {
-        return ItemStackUtils.acceptsFluidItem(stack);
-    }
-
-    public static void processFluidItems(final IFluidTank tank, final ItemStackHandler fluidItems) {
-        ItemStackUtils.fillItemFromTank(fluidItems, tank);
-    }
+  public static void processFluidItems(final IFluidTank tank, final ItemStackHandler fluidItems) {
+    ItemStackUtils.fillItemFromTank(fluidItems, tank);
+  }
 }
