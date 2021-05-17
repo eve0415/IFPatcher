@@ -1,5 +1,6 @@
 package net.eve0415.ifpatcher;
 
+import net.eve0415.ifpatcher.patch.PatchConveyorInsertionUpgrade;
 import net.eve0415.ifpatcher.patch.PatchLaserBase;
 import net.eve0415.ifpatcher.patch.PatchPlantSower;
 import net.eve0415.ifpatcher.patch.PatchPotionBrewer;
@@ -10,6 +11,10 @@ public class Transformer implements IClassTransformer {
   @Override
   public byte[] transform(final String name, final String transformedName, final byte[] bytes) {
     switch (transformedName) {
+      case "com.buuz135.industrial.proxy.block.upgrade.ConveyorInsertionUpgrade":
+        IFPatcher.LOGGER.info("Patching Laser Base from IF");
+        return new PatchConveyorInsertionUpgrade(bytes).apply();
+
       case "com.buuz135.industrial.tile.world.FluidPumpTile":
         IFPatcher.LOGGER.info("Patching Fluid Pump from IF");
         return new PatchPump(bytes).apply();

@@ -10,6 +10,8 @@ Please use the latest version [(1.12.13-237)](https://www.curseforge.com/minecra
 
 This mod will patch some bugs or implement some features:
 
+- Insertion Conveyor Upgrade
+  - Will not duplicate items when using this upgrade on one conveyor belt.
 - Fluid Pump
   - Make pump work properly on any conditions.
   - Can now fill fluid to buckets directly from GUI.
