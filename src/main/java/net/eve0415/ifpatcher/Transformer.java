@@ -1,10 +1,6 @@
 package net.eve0415.ifpatcher;
 
-import net.eve0415.ifpatcher.patch.PatchConveyorInsertionUpgrade;
-import net.eve0415.ifpatcher.patch.PatchLaserBase;
-import net.eve0415.ifpatcher.patch.PatchPlantSower;
-import net.eve0415.ifpatcher.patch.PatchPotionBrewer;
-import net.eve0415.ifpatcher.patch.PatchPump;
+import net.eve0415.ifpatcher.patch.*;
 import net.minecraft.launchwrapper.IClassTransformer;
 
 public class Transformer implements IClassTransformer {

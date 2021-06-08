@@ -1,13 +1,14 @@
 package net.eve0415.ifpatcher.patch;
 
-import java.util.ListIterator;
+import net.eve0415.ifpatcher.IFPatcher;
+import net.eve0415.ifpatcher.Patch;
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InvokeDynamicInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
-import net.eve0415.ifpatcher.IFPatcher;
-import net.eve0415.ifpatcher.Patch;
+
+import java.util.ListIterator;
 
 public class PatchLaserBase extends Patch {
   public PatchLaserBase(final byte[] inputClass) {
@@ -19,7 +20,7 @@ public class PatchLaserBase extends Patch {
     String foundHookMethod = null;
     final InsnList innerUpdate = findMethod("innerUpdate").instructions;
 
-    for (final ListIterator<AbstractInsnNode> it = innerUpdate.iterator(); it.hasNext();) {
+    for (final ListIterator<AbstractInsnNode> it = innerUpdate.iterator(); it.hasNext(); ) {
       final AbstractInsnNode insnNode = it.next();
       if (insnNode.getOpcode() == INVOKEDYNAMIC) {
         for (final Object bsm : ((InvokeDynamicInsnNode) insnNode).bsmArgs) {
@@ -40,7 +41,7 @@ public class PatchLaserBase extends Patch {
 
     final InsnList patchMethod = findMethod(foundHookMethod).instructions;
 
-    for (final ListIterator<AbstractInsnNode> it = patchMethod.iterator(); it.hasNext();) {
+    for (final ListIterator<AbstractInsnNode> it = patchMethod.iterator(); it.hasNext(); ) {
       final AbstractInsnNode insnNode = it.next();
       if (insnNode.getOpcode() == INVOKEVIRTUAL && insnNode instanceof MethodInsnNode) {
         if (((MethodInsnNode) insnNode).name.equals("getLenseChanceIncrease")) {

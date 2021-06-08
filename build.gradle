@@ -1,125 +1,120 @@
 buildscript {
-    repositories {
-        maven { url = 'https://files.minecraftforge.net/maven' }
-        jcenter()
-        mavenCentral()
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
-    }
+  repositories {
+    maven { url = "https://files.minecraftforge.net/maven" }
+    mavenCentral()
+  }
+  dependencies {
+    classpath group: "net.minecraftforge.gradle", name: "ForgeGradle", version: "3.+", changing: true
+  }
 }
 
 plugins {
-    id 'net.kyori.blossom' version "1.1.0"
+  id "net.kyori.blossom" version "1.2.0"
 }
 
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'eclipse'
+apply plugin: "net.minecraftforge.gradle"
+apply plugin: "eclipse"
 
 import net.minecraftforge.gradle.common.task.SignJar
-import groovy.json.JsonSlurper                       
-import groovy.json.JsonOutput
 
-version = '1.4.0'
-group = 'net.eve0415.minecraft'
-archivesBaseName = 'IFPatcher'
+version = "1.4.0"
+group = "net.eve0415.minecraft"
+archivesBaseName = "IFPatcher"
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = "1.8" // Need this here so eclipse task generates correctly.
 
 minecraft {
-    mappings channel: 'snapshot', version: '20180814-1.12'
+  mappings channel: "snapshot", version: "20180814-1.12"
 
-    runs {
-        client {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
-            jvmArg '-Dfml.coreMods.load=net.eve0415.ifpatcher.IFPatcher'
-        }
-
-        server {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
-            jvmArg '-Dfml.coreMods.load=net.eve0415.ifpatcher.IFPatcher'
-        }
+  runs {
+    client {
+      workingDirectory("run")
+      property "forge.logging.markers", "SCAN,REGISTRIES,REGISTRYDUMP"
+      property "forge.logging.console.level", "debug"
+      jvmArg "-Dfml.coreMods.load=net.eve0415.ifpatcher.IFPatcher"
     }
+
+    server {
+      workingDirectory("run")
+      property "forge.logging.markers", "SCAN,REGISTRIES,REGISTRYDUMP"
+      property "forge.logging.console.level", "debug"
+      jvmArg "-Dfml.coreMods.load=net.eve0415.ifpatcher.IFPatcher"
+    }
+  }
 }
 
 repositories {
-    maven { url 'https://www.cursemaven.com' }
+  maven { url "https://www.cursemaven.com" }
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2854'
+  minecraft "net.minecraftforge:forge:1.12.2-14.23.5.2854"
 
-    compile "curse.maven:industrialforegoing-266515:2745321"
-    compile "curse.maven:teslacorelib-254602:2891841"
+  compile "curse.maven:industrialforegoing-266515:2745321"
+  compile "curse.maven:teslacorelib-254602:2891841"
 }
 
 if (file("secret.properties").exists()) {
-    Properties properties = new Properties()
-    properties.load(project.rootProject.file('secret.properties').newDataInputStream())
-    ext.keyStore = properties.getProperty('keyStore')
-    ext.keyStoreAlias = properties.getProperty('keyStoreAlias')
-    ext.keyStorePass = properties.getProperty('keyStorePass')
-    ext.keyStoreKeyPass = properties.getProperty('keyStoreKeyPass')
-}
-
-processResources {
-	inputs.property "version", project.version
-
-	from(sourceSets.main.resources.srcDirs) {
-		include 'mcmod.info'
-
-		expand 'version': project.version
-	}
-
-	from(sourceSets.main.resources.srcDirs) {
-		exclude 'mcmod.info'
-	}
+  Properties properties = new Properties()
+  properties.load(project.rootProject.file("secret.properties").newDataInputStream())
+  ext.signSHA1 = properties.getProperty("signSHA1")
+  ext.keyStore = properties.getProperty("keyStore")
+  ext.keyStoreAlias = properties.getProperty("keyStoreAlias")
+  ext.keyStorePass = properties.getProperty("keyStorePass")
+  ext.keyStoreKeyPass = properties.getProperty("keyStoreKeyPass")
 }
 
 blossom {
-    replaceTokenIn('src/main/java/net/eve0415/ifpatcher/Reference.java')
-    replaceToken '@VERSION@', version
-    replaceToken '@FINGERPRINT@', project.hasProperty('signSHA1') ? project.getProperty('signSHA1') : System.getenv('signSHA1')
+  replaceToken("@VERSION@", version)
+  replaceToken("@FINGERPRINT@", project.hasProperty("signSHA1") ? project.getProperty("signSHA1") : System.getenv("signSHA1"))
+}
 
+processResources {
+  inputs.property "version", project.version
+
+  from(sourceSets.main.resources.srcDirs) {
+    include "mcmod.info"
+
+    expand "version": project.version
+  }
+
+  from(sourceSets.main.resources.srcDirs) {
+    exclude "mcmod.info"
+  }
 }
 
 compileJava {
-    options.compilerArgs += [
-            '-Xlint:-processing',
-            '-proc:none'
-    ]
-    options.encoding = 'utf8'
+  options.compilerArgs += [
+    "-Xlint:-processing",
+    "-proc:none"
+  ]
+  options.encoding = "utf8"
 }
 
 jar {
-    manifest {
-        attributes([
-            "Specification-Title": "IFPatcher",
-            "Specification-Vendor": "eve0415",
-            "Specification-Version": "1", // We are version 1 of ourselves
-            "Implementation-Title": project.name,
-            "Implementation-Version": "${version}",
-            "Implementation-Vendor" :"eve0415",
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-            "FMLCorePlugin": "net.eve0415.ifpatcher.IFPatcher",
-            "FMLCorePluginContainsFMLMod": "true",
-        ])
-    }
+  manifest {
+    attributes([
+      "Specification-Title"        : "IFPatcher",
+      "Specification-Vendor"       : "eve0415",
+      "Specification-Version"      : "1", // We are version 1 of ourselves
+      "Implementation-Title"       : project.name,
+      "Implementation-Version"     : "${version}",
+      "Implementation-Vendor"      : "eve0415",
+      "Implementation-Timestamp"   : new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+      "FMLCorePlugin"              : "net.eve0415.ifpatcher.IFPatcher",
+      "FMLCorePluginContainsFMLMod": "true",
+    ])
+  }
 }
 
-jar.finalizedBy('reobfJar') 
-
-task signJar(type: SignJar, dependsOn: jar) {
-    keyStore = project.hasProperty('keyStore') ? project.getProperty('keyStore') : System.getenv('keyStore')
-    alias = project.hasProperty('keyStoreAlias') ? project.getProperty('keyStoreAlias') : System.getenv('keyStoreAlias')
-    storePass = project.hasProperty('keyStorePass') ? project.getProperty('keyStorePass') : System.getenv('keyStorePass')
-    keyPass = project.hasProperty('keyStoreKeyPass') ? project.getProperty('keyStoreKeyPass') : System.getenv('keyStoreKeyPass')
-    inputFile = jar.archivePath
-    outputFile = jar.archivePath
+task signJar(type: SignJar) {
+  keyStore = project.hasProperty("keyStore") ? project.getProperty("keyStore") : System.getenv("keyStore")
+  alias = project.hasProperty("keyStoreAlias") ? project.getProperty("keyStoreAlias") : System.getenv("keyStoreAlias")
+  storePass = project.hasProperty("keyStorePass") ? project.getProperty("keyStorePass") : System.getenv("keyStorePass")
+  keyPass = project.hasProperty("keyStoreKeyPass") ? project.getProperty("keyStoreKeyPass") : System.getenv("keyStoreKeyPass")
+  inputFile = jar.archivePath
+  outputFile = jar.archivePath
 }
 
+jar.finalizedBy("reobfJar")
 build.dependsOn signJar
