@@ -17,10 +17,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import org.objectweb.asm.tree.*;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Queue;
+import java.util.*;
 
 public class PatchPump extends Patch {
   public static IFluidTank tank;
@@ -53,7 +50,7 @@ public class PatchPump extends Patch {
       return 0;
 
     final FluidStack willPump =
-      FluidUtil.getFluidHandler(world, farthestFluid, null).drain(1000, true);
+      Objects.requireNonNull(FluidUtil.getFluidHandler(world, farthestFluid, null)).drain(1000, true);
     if (BlockRegistry.fluidPumpBlock.isReplaceFluidWithCobble()) {
       world.setBlockState(farthestFluid, Blocks.COBBLESTONE.getDefaultState());
     } else {
@@ -94,7 +91,7 @@ public class PatchPump extends Patch {
     final IFluidHandler f = FluidUtil.getFluidHandler(world, pos, null);
     if (f == null)
       return false;
-    return FluidUtil.getFluidHandler(world, pos, null).drain(1000, false) != null;
+    return Objects.requireNonNull(FluidUtil.getFluidHandler(world, pos, null)).drain(1000, false) != null;
   }
 
   public static boolean acceptsFluidItem(final ItemStack stack) {

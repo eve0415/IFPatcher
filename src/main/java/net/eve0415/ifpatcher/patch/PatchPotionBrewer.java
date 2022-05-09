@@ -9,6 +9,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.ndrei.teslacorelib.inventory.BoundingRectangle;
 import net.ndrei.teslacorelib.inventory.ColoredItemHandler;
 import net.ndrei.teslacorelib.inventory.LockableItemHandler;
+import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.tree.*;
 
 import java.util.ListIterator;
@@ -24,7 +25,7 @@ public class PatchPotionBrewer extends Patch {
     return new ColoredItemHandler(inputIngredients, EnumDyeColor.GREEN, "Ingredients items",
       new BoundingRectangle(18 * 4 + 10, 25, 5 * 18, 18)) {
       @Override
-      public boolean canInsertItem(final int slot, final ItemStack stack) {
+      public boolean canInsertItem(final int slot, @NotNull final ItemStack stack) {
         if (inputIngredients.getLocked()) {
           return super.canInsertItem(slot, stack);
         }
