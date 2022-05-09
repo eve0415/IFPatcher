@@ -31,7 +31,7 @@ repositories {
 }
 
 group = "net.eve0415"
-version = "1.5.0-SNAPSHOT"
+version = "2.0.0"
 
 java.toolchain.languageVersion.set(JavaLanguageVersion.of(8))
 
