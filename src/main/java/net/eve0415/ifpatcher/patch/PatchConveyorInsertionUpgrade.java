@@ -42,8 +42,7 @@ public class PatchConveyorInsertionUpgrade extends Patch {
 
     final InsnList newInst = new InsnList();
     newInst.add(new VarInsnNode(ALOAD, 1));
-    newInst.add(new MethodInsnNode(INVOKESTATIC, hookClass, "insertLine",
-      "(Lnet/minecraft/entity/Entity;)V", false));
+    newInst.add(new MethodInsnNode(INVOKESTATIC, hookClass, "insertLine", "(Lnet/minecraft/entity/Entity;)V", false));
     handleEntity.insert(insertionPoint, newInst);
     IFPatcher.LOGGER.info("Using 'Insertion Conveyor Upgrade' will no longer duplicate items!");
 
