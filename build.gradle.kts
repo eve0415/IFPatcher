@@ -3,7 +3,7 @@ import net.minecraftforge.gradle.common.tasks.SignJar
 import net.minecraftforge.gradle.userdev.UserDevExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.util.*
-  
+
 plugins {
   java
   kotlin("jvm") version "1.6.21"
