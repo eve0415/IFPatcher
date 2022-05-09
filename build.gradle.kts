@@ -72,8 +72,6 @@ blossom {
   replaceToken("@FINGERPRINT@", signProps["signSHA1"])
 }
 
-/*reobf.create("shadowJar")*/
-
 tasks {
   compileJava {
     sourceCompatibility = "1.8"
@@ -115,7 +113,7 @@ tasks {
     archiveFileName.set("IFPatcher-${project.version}.jar")
     exclude("**/module-info.class")
     minimize()
-    finalizedBy("reobfShadowJar")
+    dependsOn("reobfJar")
 
     dependencies {
       include(dependency("org.jetbrains.kotlin:kotlin-stdlib"))
@@ -123,7 +121,7 @@ tasks {
   }
 
   create<SignJar>("signJar") {
-    dependsOn("reobfShadowJar")
+    dependsOn("shadowJar")
     onlyIf {
       signProps.isNotEmpty()
     }
@@ -132,8 +130,8 @@ tasks {
     storePass.set(signProps["keyStorePass"] as String)
     alias.set(signProps["keyStoreAlias"] as String)
     keyPass.set(signProps["keyStoreKeyPass"] as String)
-    inputFile.set(named<Jar>("shadowJar").get().archiveFile)
-    outputFile.set(named<Jar>("shadowJar").get().archiveFile)
+    inputFile.set(named<ShadowJar>("shadowJar").get().archiveFile)
+    outputFile.set(named<ShadowJar>("shadowJar").get().archiveFile)
   }
 
   named("build") {
