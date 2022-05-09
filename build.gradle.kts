@@ -1,14 +1,11 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import net.minecraftforge.gradle.common.tasks.SignJar
 import net.minecraftforge.gradle.userdev.UserDevExtension
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.util.*
 
 plugins {
   java
   kotlin("jvm") version "1.6.21"
   id("net.kyori.blossom") version "1.3.0"
-  id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 buildscript {
@@ -36,8 +33,6 @@ repositories {
 group = "net.eve0415"
 version = "1.5.0-SNAPSHOT"
 
-val compileKotlin: KotlinCompile by tasks
-compileKotlin.kotlinOptions.jvmTarget = "1.8"
 java.toolchain.languageVersion.set(JavaLanguageVersion.of(8))
 
 val signProps = if (!System.getenv("KEY_STORE").isNullOrEmpty()) {
@@ -62,7 +57,6 @@ configure<UserDevExtension> {
 
 dependencies {
   "minecraft"("net.minecraftforge:forge:1.12.2-14.23.5.2860")
-  api(kotlin("stdlib"))
   implementation("curse.maven:industrialforegoing-266515:2745321")
   implementation("curse.maven:teslacorelib-254602:3438487")
 }
@@ -74,11 +68,6 @@ blossom {
 
 tasks {
   compileJava {
-    sourceCompatibility = "1.8"
-    targetCompatibility = "1.8"
-  }
-
-  compileKotlin {
     sourceCompatibility = "1.8"
     targetCompatibility = "1.8"
   }
@@ -109,19 +98,8 @@ tasks {
     }
   }
 
-  named<ShadowJar>("shadowJar") {
-    archiveFileName.set("IFPatcher-${project.version}.jar")
-    exclude("**/module-info.class")
-    minimize()
-    dependsOn("reobfJar")
-
-    dependencies {
-      include(dependency("org.jetbrains.kotlin:kotlin-stdlib"))
-    }
-  }
-
   create<SignJar>("signJar") {
-    dependsOn("shadowJar")
+    dependsOn("reobfJar")
     onlyIf {
       signProps.isNotEmpty()
     }
@@ -130,8 +108,8 @@ tasks {
     storePass.set(signProps["keyStorePass"] as String)
     alias.set(signProps["keyStoreAlias"] as String)
     keyPass.set(signProps["keyStoreKeyPass"] as String)
-    inputFile.set(named<ShadowJar>("shadowJar").get().archiveFile)
-    outputFile.set(named<ShadowJar>("shadowJar").get().archiveFile)
+    inputFile.set(named<Jar>("jar").get().archiveFile)
+    outputFile.set(named<Jar>("jar").get().archiveFile)
   }
 
   named("build") {
