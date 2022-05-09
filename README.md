@@ -21,6 +21,8 @@ This mod will patch some bugs or implement some features:
   - Can now brew potion that the ingredients does not start from `minecraft:nether_wart`. (Ex. Potion of Weakness)
 - Plant Sower
   - Till any blocks if possible. (You no longer have to use `minecraft:dirt` or `minecraft:grass`)
+- MobImprisonmentTool
+  - Implement blacklist for mobs that can't be imprisoned.
 
 If you find any other issues related to IF, please open an issue or pull request on this repository.
 
