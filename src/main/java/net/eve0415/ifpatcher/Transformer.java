@@ -19,6 +19,10 @@ public class Transformer implements IClassTransformer {
                 IFPatcher.LOGGER.info("Patching CustomConfiguration from IF");
                 return new PatchCustomConfiguration(bytes).apply();
 
+            case "com.buuz135.industrial.utils.ItemStackUtils":
+                IFPatcher.LOGGER.info("Patching ItemStackUtils from IF");
+                return new PatchItemStackUtils(bytes).apply();
+
             case "com.buuz135.industrial.tile.world.LaserBaseTile":
                 IFPatcher.LOGGER.info("Patching Laser Base from IF");
                 return new PatchLaserBase(bytes).apply();
