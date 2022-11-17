@@ -23,6 +23,7 @@ This mod will patch some bugs or implement some features:
   - Till any blocks if possible. (You no longer have to use `minecraft:dirt` or `minecraft:grass`)
 - Mob Imprisonment Tool
   - Implement blacklist for mobs that can't be imprisoned.
+    - Support wildcard `*`. (Ex. `minecraft:*`)
 - Latex Processing Unit
     - Will not eat `Latex Bucket` when tank is already full enough to fill.
 
