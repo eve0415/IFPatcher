@@ -33,7 +33,11 @@ repositories {
 group = "net.eve0415"
 version = "2.1.1-SNAPSHOT"
 
-java.toolchain.languageVersion.set(JavaLanguageVersion.of(8))
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(8))
+    }
+}
 
 val signProps = if (!System.getenv("KEY_STORE").isNullOrEmpty()) {
   System.getenv("KEY_STORE").reader().let {
@@ -104,10 +108,10 @@ tasks {
       signProps.isNotEmpty()
     }
 
-    keyStore.set(signProps["keyStore"] as String)
-    storePass.set(signProps["keyStorePass"] as String)
-    alias.set(signProps["keyStoreAlias"] as String)
-    keyPass.set(signProps["keyStoreKeyPass"] as String)
+    keyStore.set(signProps["keyStore"] as String?)
+    storePass.set(signProps["keyStorePass"] as String?)
+    alias.set(signProps["keyStoreAlias"] as String?)
+    keyPass.set(signProps["keyStoreKeyPass"] as String?)
     inputFile.set(named<Jar>("jar").get().archiveFile)
     outputFile.set(named<Jar>("jar").get().archiveFile)
   }
