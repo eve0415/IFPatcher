@@ -8,6 +8,7 @@ import org.objectweb.asm.tree.*;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class PatchMobImprisonmentTool extends Patch {
     public static List<String> blacklistedEntities;
@@ -18,11 +19,19 @@ public class PatchMobImprisonmentTool extends Patch {
 
     public static void configuration(Configuration config) {
         blacklistedEntities = Arrays.asList(CustomConfiguration.config.getStringList("entityBlacklist", Configuration.CATEGORY_GENERAL + Configuration.CATEGORY_SPLITTER + "mob_imprisonment_tool",
-                new String[]{}, "A list of entities blacklist from being captured with the tool. Format: 'modid:entityid'"));
+                new String[]{}, "A list of entities blacklist from being captured with the tool. Format: 'modid:entityid', 'modid:*', 'modid:chicken*'"));
     }
 
     public static boolean isBlacklisted(String entity) {
-        return blacklistedEntities.contains(entity);
+        for (String blacklistedEntity : blacklistedEntities) {
+            if (!blacklistedEntity.contains("*") && blacklistedEntity.equals(entity)) {
+                return true;
+            } else if (blacklistedEntity.contains("*")) {
+                Pattern pattern = Pattern.compile(blacklistedEntity.replace("*", ".*"));
+                if (pattern.matcher(entity).matches()) return true;
+            }
+        }
+        return false;
     }
 
     @Override
