@@ -8,6 +8,7 @@ import org.objectweb.asm.tree.*;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.regex.Pattern;
 
 public class PatchMobImprisonmentTool extends Patch {
@@ -19,7 +20,7 @@ public class PatchMobImprisonmentTool extends Patch {
 
     public static void configuration(Configuration config) {
         blacklistedEntities = Arrays.asList(CustomConfiguration.config.getStringList("entityBlacklist", Configuration.CATEGORY_GENERAL + Configuration.CATEGORY_SPLITTER + "mob_imprisonment_tool",
-                new String[]{}, "A list of entities blacklist from being captured with the tool. Format: 'modid:entityid', 'modid:*', 'modid:chicken*'"));
+                new String[]{"minecraft:wither"}, "A list of entities blacklist from being captured with the tool. Format: 'modid:entityid', 'modid:*', 'modid:chicken*'"));
     }
 
     public static boolean isBlacklisted(String entity) {
@@ -51,6 +52,21 @@ public class PatchMobImprisonmentTool extends Patch {
         isBlacklisted.add(new MethodInsnNode(INVOKESTATIC, hookClass, "isBlacklisted", "(Ljava/lang/String;)Z", false));
         isBlacklisted.add(new InsnNode(IRETURN));
         IFPatcher.LOGGER.info("Implement MobImprisonmentTool blacklist");
+
+        // Remove default blacklist of boss
+        final InsnList itemInteractionForEntity = findMethod(getName("itemInteractionForEntity", "func_111207_a")).instructions;
+        for (final ListIterator<AbstractInsnNode> it = itemInteractionForEntity.iterator(); it.hasNext(); ) {
+            final AbstractInsnNode insnNode = it.next();
+            if (insnNode instanceof MethodInsnNode) {
+                final MethodInsnNode methodInsnNode = (MethodInsnNode) insnNode;
+                if (methodInsnNode.name.equals(getName("isNonBoss", "func_184222_aU"))) {
+                    itemInteractionForEntity.remove(methodInsnNode.getPrevious());
+                    itemInteractionForEntity.remove(methodInsnNode.getNext());
+                    itemInteractionForEntity.remove(methodInsnNode);
+                }
+            }
+        }
+        IFPatcher.LOGGER.info("Remove default blacklist of boss");
 
         return true;
     }
