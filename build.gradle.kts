@@ -4,7 +4,7 @@ import java.util.*
 
 plugins {
   java
-  kotlin("jvm") version "1.7.10"
+  kotlin("jvm") version "1.7.22"
   id("net.kyori.blossom") version "1.3.1"
 }
 
