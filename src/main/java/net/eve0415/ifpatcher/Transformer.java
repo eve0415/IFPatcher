@@ -12,7 +12,7 @@ public class Transformer implements IClassTransformer {
                 return new PatchCommonProxy(bytes).apply();
 
             case "com.buuz135.industrial.proxy.block.upgrade.ConveyorInsertionUpgrade":
-                IFPatcher.LOGGER.info("Patching Laser Base from IF");
+                IFPatcher.LOGGER.info("Patching Conveyor Insertion Upgrade from IF");
                 return new PatchConveyorInsertionUpgrade(bytes).apply();
 
             case "com.buuz135.industrial.config.CustomConfiguration":

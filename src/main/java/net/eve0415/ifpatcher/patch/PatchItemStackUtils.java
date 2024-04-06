@@ -12,9 +12,12 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
-import org.objectweb.asm.tree.*;
+import org.objectweb.asm.tree.InsnList;
+import org.objectweb.asm.tree.InsnNode;
+import org.objectweb.asm.tree.MethodInsnNode;
+import org.objectweb.asm.tree.VarInsnNode;
 
-public class PatchItemStackUtils  extends Patch {
+public class PatchItemStackUtils extends Patch {
 
     public PatchItemStackUtils(final byte[] inputClass) {
         super(inputClass);

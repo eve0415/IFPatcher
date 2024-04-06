@@ -74,8 +74,8 @@ sourceSets {
     main {
         blossom {
             javaSources {
-                property("@VERSION@", project.version.toString())
-                property("@FINGERPRINT@", signProps["signSHA1"].toString())
+                property("VERSION", project.version.toString())
+                property("FINGERPRINT", signProps["signSHA1"].toString())
             }
         }
     }

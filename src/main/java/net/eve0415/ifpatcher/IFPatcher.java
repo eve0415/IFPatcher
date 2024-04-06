@@ -1,5 +1,6 @@
 package net.eve0415.ifpatcher;
 
+import net.eve0415.ifpatcher.internal.Reference;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.MCVersion;
@@ -11,11 +12,11 @@ import java.util.Map;
 @MCVersion("1.12.2")
 @IFMLLoadingPlugin.SortingIndex(1001)
 @Mod(
-        modid = Reference.MODID,
-        name = Reference.NAME,
-        version = Reference.VERSION,
-        dependencies = Reference.DEPENDENCIES,
-        certificateFingerprint = Reference.FINGERPRINT,
+        modid = net.eve0415.ifpatcher.internal.Reference.MODID,
+        name = net.eve0415.ifpatcher.internal.Reference.NAME,
+        version = net.eve0415.ifpatcher.internal.Reference.VERSION,
+        dependencies = net.eve0415.ifpatcher.internal.Reference.DEPENDENCIES,
+        certificateFingerprint = net.eve0415.ifpatcher.internal.Reference.FINGERPRINT,
         updateJSON = Reference.UPDATEJSON,
         acceptableRemoteVersions = "*"
 )
