@@ -4,8 +4,8 @@ import java.util.*
 
 plugins {
   java
-  kotlin("jvm") version "1.7.22"
-  id("net.kyori.blossom") version "1.3.1"
+    kotlin("jvm") version "1.9.23"
+    id("net.kyori.blossom") version "2.1.0"
 }
 
 buildscript {
@@ -14,7 +14,7 @@ buildscript {
   }
 
   dependencies {
-    classpath("net.minecraftforge.gradle:ForgeGradle:5.1.+") {
+      classpath("net.minecraftforge.gradle:ForgeGradle:[6.0,6.2)") {
       isChanging = true
     }
   }
@@ -27,7 +27,11 @@ repositories {
   gradlePluginPortal()
   maven(url = "https://maven.minecraftforge.net")
   maven(url = "https://plugins.gradle.org/m2/")
-  maven(url = "https://www.cursemaven.com")
+    maven(url = "https://cursemaven.com") {
+        content {
+            includeGroup("curse.maven")
+        }
+    }
 }
 
 group = "net.eve0415"
@@ -63,11 +67,18 @@ dependencies {
   "minecraft"("net.minecraftforge:forge:1.12.2-14.23.5.2860")
   implementation("curse.maven:industrialforegoing-266515:2745321")
   implementation("curse.maven:teslacorelib-254602:3438487")
+    implementation(kotlin("stdlib-jdk8"))
 }
 
-blossom {
-  replaceToken("@VERSION@", project.version)
-  replaceToken("@FINGERPRINT@", signProps["signSHA1"])
+sourceSets {
+    main {
+        blossom {
+            javaSources {
+                property("@VERSION@", project.version.toString())
+                property("@FINGERPRINT@", signProps["signSHA1"].toString())
+            }
+        }
+    }
 }
 
 tasks {
