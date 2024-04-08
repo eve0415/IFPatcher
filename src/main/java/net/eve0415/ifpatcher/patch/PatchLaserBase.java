@@ -11,6 +11,7 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import java.util.ListIterator;
 
 public class PatchLaserBase extends Patch {
+
     public PatchLaserBase(final byte[] inputClass) {
         super(inputClass);
     }

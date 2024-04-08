@@ -13,6 +13,7 @@ import org.objectweb.asm.tree.VarInsnNode;
 import java.util.ListIterator;
 
 public class PatchConveyorInsertionUpgrade extends Patch {
+
     public PatchConveyorInsertionUpgrade(final byte[] inputClass) {
         super(inputClass);
     }

@@ -107,7 +107,7 @@ public class PatchPump extends Patch {
         final MethodNode processFluidItems = new MethodNode(ACC_PROTECTED, "processFluidItems", "(Lnet/minecraftforge/items/ItemStackHandler;)V", null, null);
         processFluidItems.instructions.add(new VarInsnNode(ALOAD, 0));
         processFluidItems.instructions.add(new InsnNode(DUP));
-        String hook = "com/buuz135/industrial/tile/world/FluidPumpTile";
+        final String hook = "com/buuz135/industrial/tile/world/FluidPumpTile";
         processFluidItems.instructions.add(new FieldInsnNode(GETFIELD, hook, "tank", "Lnet/minecraftforge/fluids/IFluidTank;"));
         processFluidItems.instructions.add(new VarInsnNode(ALOAD, 1));
         processFluidItems.instructions.add(new MethodInsnNode(INVOKESTATIC, hookClass, "processFluidItems", "(Lnet/minecraftforge/fluids/IFluidTank;Lnet/minecraftforge/items/ItemStackHandler;)V", false));
