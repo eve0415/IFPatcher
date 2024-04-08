@@ -33,7 +33,7 @@ jobs:
           ./gradlew build
 
       - name: Release package
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         if: success()
         with:
           files: build/libs/*.jar
