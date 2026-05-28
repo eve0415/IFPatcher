@@ -54,7 +54,7 @@ dependencies {
     implementation("curse.maven:teslacorelib-254602:3438487")
 }
 
-configurations.testRuntimeClasspath {
+configurations.all {
     exclude(group = "ca.weblite", module = "java-objc-bridge")
 }
 
