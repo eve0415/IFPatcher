@@ -54,6 +54,10 @@ dependencies {
     implementation("curse.maven:teslacorelib-254602:3438487")
 }
 
+configurations.testRuntimeClasspath {
+    exclude(group = "ca.weblite", module = "java-objc-bridge")
+}
+
 val renameJar = renamer.classes(tasks.named<Jar>("jar")) {
     map.from(minecraft.dependency.toSrgFile)
     output.set(layout.buildDirectory.file("libs/${project.name}-${project.version}.jar"))
@@ -104,19 +108,17 @@ tasks {
     }
 
     register<Exec>("signJar") {
-        dependsOn("renameJar")
-        onlyIf { signProps.isNotEmpty() }
-        val renameJarTask = project.tasks.named("renameJar")
-        doFirst {
-            commandLine(
-                "jarsigner",
-                "-keystore", signProps["keyStore"].toString(),
-                "-storepass", signProps["keyStorePass"].toString(),
-                "-keypass", signProps["keyStoreKeyPass"].toString(),
-                renameJarTask.get().outputs.files.singleFile.absolutePath,
-                signProps["keyStoreAlias"].toString(),
-            )
-        }
+        dependsOn(renameJar)
+        val shouldSign = signProps.isNotEmpty()
+        onlyIf { shouldSign }
+        executable = "jarsigner"
+        args(
+            "-keystore", signProps["keyStore"].toString(),
+            "-storepass", signProps["keyStorePass"].toString(),
+            "-keypass", signProps["keyStoreKeyPass"].toString(),
+            renameJar.get().output.get().asFile.absolutePath,
+            signProps["keyStoreAlias"].toString(),
+        )
     }
 
     named("build") {
