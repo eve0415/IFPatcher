@@ -35,6 +35,9 @@ This mod will patch some bugs or implement some features:
         - Even if `blacklistBosses` is set to `false`, you can't imprison boss mobs if it is in the blacklist.
 - Latex Processing Unit
     - Will not eat `Latex Bucket` when tank is already full enough to fill.
+- Sludge Refiner
+    - Re-implement the classic Sludge Boiler debuff behavior — applies poison and hunger to all entities within 3 blocks
+      of an operating Sludge Refiner. Opt-in via `enableDebuffs`.
 
 ## Installation
 
