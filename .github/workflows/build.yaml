@@ -30,7 +30,7 @@ jobs:
         uses: gradle/actions/setup-gradle@50e97c2cd7a37755bbfafc9c5b7cafaece252f6e # v6.1.0
         with:
           add-job-summary-as-pr-comment: on-failure
-          dependency-graph: generate
+          dependency-graph: generate-and-submit
           dependency-graph-continue-on-failure: false
 
       - name: Build with Gradle
