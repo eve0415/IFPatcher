@@ -1,37 +1,10 @@
-import net.minecraftforge.gradle.common.tasks.SignJar
-import net.minecraftforge.gradle.userdev.UserDevExtension
 import java.util.*
 
 plugins {
     java
-    kotlin("jvm") version "1.9.23"
-    id("net.kyori.blossom") version "2.1.0"
-}
-
-buildscript {
-    repositories {
-        maven { url = uri("https://repo.siro256.dev/repository/maven-public/") }
-    }
-
-    dependencies {
-        classpath("net.minecraftforge.gradle:ForgeGradle:[6.0,6.2)") {
-            isChanging = true
-        }
-    }
-}
-
-apply(plugin = "net.minecraftforge.gradle")
-
-repositories {
-    mavenCentral()
-    gradlePluginPortal()
-    maven(url = "https://maven.minecraftforge.net")
-    maven(url = "https://plugins.gradle.org/m2/")
-    maven(url = "https://cursemaven.com") {
-        content {
-            includeGroup("curse.maven")
-        }
-    }
+    id("net.kyori.blossom") version "2.2.0"
+    id("net.minecraftforge.gradle") version "[7.0,8.0)"
+    id("net.minecraftforge.renamer") version "1.1.0"
 }
 
 group = "net.eve0415"
@@ -59,15 +32,31 @@ val signProps = if (!System.getenv("KEY_STORE").isNullOrEmpty()) {
     Properties()
 }
 
-configure<UserDevExtension> {
+minecraft {
     mappings("snapshot", "20180814-1.12")
 }
 
+repositories {
+    minecraft.mavenizer(this)
+    maven(fg.forgeMaven)
+    maven(fg.minecraftLibsMaven)
+    mavenCentral()
+    maven(url = "https://cursemaven.com") {
+        content {
+            includeGroup("curse.maven")
+        }
+    }
+}
+
 dependencies {
-    "minecraft"("net.minecraftforge:forge:1.12.2-14.23.5.2860")
+    implementation(minecraft.dependency("net.minecraftforge:forge:1.12.2-14.23.5.2864"))
     implementation("curse.maven:industrialforegoing-266515:2745321")
     implementation("curse.maven:teslacorelib-254602:3438487")
-    implementation(kotlin("stdlib-jdk8"))
+}
+
+val renameJar = renamer.classes(tasks.named<Jar>("jar")) {
+    map.from(minecraft.dependency.toSrgFile)
+    output.set(layout.buildDirectory.file("libs/${project.name}-${project.version}.jar"))
 }
 
 sourceSets {
@@ -97,12 +86,13 @@ tasks {
     }
 
     named<Jar>("jar") {
+        archiveClassifier.set("dev")
         manifest {
             attributes(
                 mapOf(
                     "Specification-Title" to "IFPatcher",
                     "Specification-Vendor" to "eve0415",
-                    "Specification-Version" to "1", // We are version 1 of ourselves
+                    "Specification-Version" to "1",
                     "Implementation-Title" to project.name,
                     "Implementation-Version" to project.version,
                     "Implementation-Vendor" to "eve0415",
@@ -113,18 +103,20 @@ tasks {
         }
     }
 
-    create<SignJar>("signJar") {
-        dependsOn("reobfJar")
-        onlyIf {
-            signProps.isNotEmpty()
+    register<Exec>("signJar") {
+        dependsOn("renameJar")
+        onlyIf { signProps.isNotEmpty() }
+        val renameJarTask = project.tasks.named("renameJar")
+        doFirst {
+            commandLine(
+                "jarsigner",
+                "-keystore", signProps["keyStore"].toString(),
+                "-storepass", signProps["keyStorePass"].toString(),
+                "-keypass", signProps["keyStoreKeyPass"].toString(),
+                renameJarTask.get().outputs.files.singleFile.absolutePath,
+                signProps["keyStoreAlias"].toString(),
+            )
         }
-
-        keyStore.set(signProps["keyStore"] as String?)
-        storePass.set(signProps["keyStorePass"] as String?)
-        alias.set(signProps["keyStoreAlias"] as String?)
-        keyPass.set(signProps["keyStoreKeyPass"] as String?)
-        inputFile.set(named<Jar>("jar").get().archiveFile)
-        outputFile.set(named<Jar>("jar").get().archiveFile)
     }
 
     named("build") {
