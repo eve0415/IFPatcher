@@ -9,9 +9,9 @@ import net.minecraftforge.items.IItemHandler;
 import net.ndrei.teslacorelib.inventory.BoundingRectangle;
 import net.ndrei.teslacorelib.inventory.ColoredItemHandler;
 import net.ndrei.teslacorelib.inventory.LockableItemHandler;
-import javax.annotation.Nonnull;
 import org.objectweb.asm.tree.*;
 
+import javax.annotation.Nonnull;
 import java.util.ListIterator;
 
 public class PatchPotionBrewer extends Patch {

@@ -43,6 +43,10 @@ public class Transformer implements IClassTransformer {
                 IFPatcher.LOGGER.info("Patching Fluid Pump from IF");
                 return new PatchPump(bytes).apply();
 
+            case "com.buuz135.industrial.tile.agriculture.SludgeRefinerTile":
+                IFPatcher.LOGGER.info("Patching Sludge Refiner from IF");
+                return new PatchSludgeRefiner(bytes).apply();
+
             default:
                 return bytes;
         }

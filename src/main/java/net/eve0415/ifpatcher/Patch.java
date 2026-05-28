@@ -52,5 +52,4 @@ public abstract class Patch implements Opcodes {
         }
         return null;
     }
-
 }

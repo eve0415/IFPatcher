@@ -37,6 +37,8 @@ public class PatchCommonProxy extends Patch {
         newInst.add(new FieldInsnNode(GETSTATIC, "com/buuz135/industrial/proxy/ItemRegistry", "mobImprisonmentToolItem", "Lcom/buuz135/industrial/item/MobImprisonmentToolItem;"));
         newInst.add(new FieldInsnNode(GETSTATIC, "com/buuz135/industrial/config/CustomConfiguration", "config", "Lnet/minecraftforge/common/config/Configuration;"));
         newInst.add(new MethodInsnNode(INVOKEVIRTUAL, "com/buuz135/industrial/item/MobImprisonmentToolItem", "configuration", "(Lnet/minecraftforge/common/config/Configuration;)V", false));
+        newInst.add(new FieldInsnNode(GETSTATIC, "com/buuz135/industrial/config/CustomConfiguration", "config", "Lnet/minecraftforge/common/config/Configuration;"));
+        newInst.add(new MethodInsnNode(INVOKESTATIC, getName(PatchSludgeRefiner.class), "configuration", "(Lnet/minecraftforge/common/config/Configuration;)V", false));
         handlePostInit.insert(insertionPoint, newInst);
         IFPatcher.LOGGER.info("Patched Common Proxy");
 
