@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "net.eve0415"
-version = "2.5.0"
+version = "2.5.1-SNAPSHOT"
 
 java {
     toolchain {
